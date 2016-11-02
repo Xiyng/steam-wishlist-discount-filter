@@ -1,0 +1,21 @@
+body {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+ul.links {
+    margin: 0;
+    padding: 0;
+}
+
+ul.links li {
+    list-style-type: none;
+    display: inline;
+}
+
+ul.links li:not(:first-child):before {
+    content: " | ";
+}
+
+.download-link {
+    font-weight: bold;
+}
