@@ -45,7 +45,7 @@ function itemDetails(node) {
     this.display = function(display) {
         var displayValue = display ? "block" : "none";
         this.node.style.display = displayValue;
-    }
+    };
 }
 
 /**
@@ -203,7 +203,7 @@ function percentageDiscountChanged() {
     }
     var callback = function() {
         updateShownItems(minimumDiscountPercentage);
-    }
+    };
     inputTimer = setTimeout(callback, 500);
 }
 
@@ -222,7 +222,7 @@ function clearInputTimer() {
  * @param {Number} minimumDiscountPercentage - Minimum discount percentage
  */
 function updateShownItems(minimumDiscountPercentage) {
-    var showNormallyPricedItems = minimumDiscountPercentage == 0;
+    var showNormallyPricedItems = minimumDiscountPercentage === 0;
     for (var i = 0; i < normallyPricedItems.length; i++) {
         var item = normallyPricedItems[i];
         item.display(showNormallyPricedItems);
