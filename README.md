@@ -12,6 +12,10 @@ is probably what you're looking for.
 
 ## Changelog
 
+### 1.1.1
+
+- Fix issues in recognizing when the page is loaded
+
 ### 1.1
 
 - Add support for filtering by discount percentage
