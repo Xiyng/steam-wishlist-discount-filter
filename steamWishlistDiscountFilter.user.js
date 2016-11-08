@@ -4,11 +4,11 @@
 // @namespace   Xiyng
 // @include     https://steamcommunity.com/id/*/wishlist
 // @include     https://steamcommunity.com/id/*/wishlist/*
-// @version     1.1
+// @version     1.1.1
+// @require     https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js
 // @grant       none
 // ==/UserScript==
 
-var initialized = false;
 var showOnlyDiscountedItemsCheckbox;
 var percentageLabel;
 var percentageInput;
@@ -18,17 +18,12 @@ var inputTimer; // for adding a delay to updating the item list when changing mi
 var showOnlyDiscountedItems = false;
 var minimumDiscountPercentage = 1;
 
-document.addEventListener("DOMContentLoaded", initialize);
-window.addEventListener("load", initialize); // for problematic browsers
+$(document).ready(initialize);
 
 /**
  * Adds the toggle area, and gets the list of normally priced games.
  */
 function initialize() {
-    if (initialized) {
-        return;
-    }
-
     addControls();
     updateItemLists();
     initialized = true;
