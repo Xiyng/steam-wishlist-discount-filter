@@ -14,17 +14,17 @@ is probably what you're looking for.
 
 ### 1.1.2
 
-- Fix an issue where the wishlist could not be rearranged when the script was
+- Fixed an issue where the wishlist could not be rearranged when the script was
   active
 
 ### 1.1.1
 
-- Fix issues in recognizing when the page is loaded
+- Fixed issues in recognizing when the page is loaded
 
 ### 1.1
 
-- Add support for filtering by discount percentage
-- Improve browser compatibility
+- Added support for filtering by discount percentage
+- Improved browser compatibility
 
 ### 1.0
 
