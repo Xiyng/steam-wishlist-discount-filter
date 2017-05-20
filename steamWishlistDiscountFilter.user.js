@@ -5,6 +5,7 @@
 // @include     https://steamcommunity.com/id/*/wishlist
 // @include     https://steamcommunity.com/id/*/wishlist/*
 // @version     1.1.1
+// noframes
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js
 // @grant       none
 // ==/UserScript==
@@ -26,7 +27,6 @@ $(document).ready(initialize);
 function initialize() {
     addControls();
     updateItemLists();
-    initialized = true;
 }
 
 /**
