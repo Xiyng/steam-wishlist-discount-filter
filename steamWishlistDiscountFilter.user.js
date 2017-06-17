@@ -13,6 +13,7 @@
 
 var showOnlyDiscountedItemsCheckbox;
 var priceInput;
+var percentageDiv;
 var percentageInput;
 var unpricedItems;
 var normallyPricedItems;
