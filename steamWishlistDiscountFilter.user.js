@@ -21,7 +21,7 @@ var discountedItems;
 var inputTimer; // for adding a delay to updating the item list when changing minimum discount percentage
 var maximumPrice = undefined;
 var showOnlyDiscountedItems = false;
-var minimumDiscountPercentage = 1;
+var minimumDiscountPercentage = undefined;
 
 $(document).ready(initialize);
 
@@ -90,8 +90,7 @@ function addControls() {
 
     priceInput = document.createElement("input");
     priceInput.id = "maximumPriceInput";
-    priceInput.setAttribute("type", "number");
-    priceInput.setAttribute("min", "0");
+    priceInput.setAttribute("type", "text");
     priceInput.addEventListener("input", maximumPriceChanged);
     priceInput.style.width = "3.5em";
     priceDiv.appendChild(priceInput);
@@ -125,10 +124,10 @@ function addControls() {
 
     percentageInput = document.createElement("input");
     percentageInput.id = "discountPercentageInput";
-    percentageInput.setAttribute("type", "number");
-    percentageInput.setAttribute("value", minimumDiscountPercentage);
-    percentageInput.setAttribute("min", "0");
-    percentageInput.setAttribute("max", "100");
+    percentageInput.setAttribute("type", "text");
+    if (minimumDiscountPercentage) {
+        percentageInput.setAttribute("value", minimumDiscountPercentage);
+    }
     percentageInput.addEventListener("input", percentageDiscountChanged);
     percentageInput.style.width = "3.5em";
     percentageDiv.appendChild(percentageInput);
@@ -238,18 +237,11 @@ function maximumPriceChanged() {
     var input = priceInput.value;
     if (input === "") {
         maximumPrice = undefined;
-        clearInputTimer();
-        return;
     }
 
     var inputValue = Number.parseInt(input);
-    if (isNaN(inputValue)) {
-        maximumPrice = undefined;
-        clearInputTimer();
-        return;
-    }
+    maximumPrice = isNaN(inputValue) ? undefined : inputValue;
 
-    maximumPrice = inputValue;
     if (inputTimer) {
         clearInputTimer();
     }
@@ -266,17 +258,12 @@ function maximumPriceChanged() {
 function percentageDiscountChanged() {
     var input = percentageInput.value;
     if (input === "") {
-        clearInputTimer();
-        return;
+        minimumDiscountPercentage = undefined;
     }
 
     var inputValue = Number.parseInt(input);
-    if (input < 0 || input > 100) {
-        clearInputTimer();
-        return;
-    }
+    minimumDiscountPercentage = isNaN(inputValue) ? undefined : inputValue;
 
-    minimumDiscountPercentage = input;
     if (inputTimer) {
         clearInputTimer();
     }
@@ -300,9 +287,11 @@ function clearInputTimer() {
  * Updates the list of shown items according to the minimum discount percentage.
  */
 function updateShownItems() {
-    var showUndiscountedItems =
-        !showOnlyDiscountedItems || minimumDiscountPercentage === 0;
     var maximumPriceSet = !isNaN(maximumPrice);
+    var minimumDiscountPercentageSet = !isNaN(minimumDiscountPercentage);
+    var showUndiscountedItems =
+        !showOnlyDiscountedItems ||
+        (minimumDiscountPercentageSet && minimumDiscountPercentage === 0);
 
     for (var i = 0; i < unpricedItems.length; i++) {
         var item = unpricedItems[i];
@@ -318,10 +307,10 @@ function updateShownItems() {
 
     for (var i = 0; i < discountedItems.length; i++) {
         var item = discountedItems[i];
-        var discountGoodEnough =
-            item.discountPercentage >= minimumDiscountPercentage;
-        var priceGoodEnough =
-            maximumPriceSet ? item.price <= maximumPrice : true;
+        var discountGoodEnough = minimumDiscountPercentageSet ?
+            item.discountPercentage >= minimumDiscountPercentage : true;
+        var priceGoodEnough = maximumPriceSet ?
+            item.price <= maximumPrice : true;
         var showItem = discountGoodEnough && priceGoodEnough;
         item.display(showItem);
     }
