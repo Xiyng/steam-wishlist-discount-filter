@@ -13,11 +13,13 @@
 
 var showOnlyDiscountedItemsCheckbox;
 var percentageLabel;
+var priceInput;
 var percentageInput;
 var unpricedItems;
 var normallyPricedItems;
 var discountedItems;
 var inputTimer; // for adding a delay to updating the item list when changing minimum discount percentage
+var maximumPrice = undefined;
 var showOnlyDiscountedItems = false;
 var minimumDiscountPercentage = 1;
 
@@ -76,6 +78,25 @@ function addControls() {
     var wishlist = document.getElementById("wishlist_items");
     var controls = document.createElement("div");
     controls.style.display = "inline";
+
+    var priceDiv = document.createElement("div");
+    priceDiv.style.textAlign = "right";
+
+    var priceLabel = document.createElement("label");
+    priceLabel.setAttribute("for", "maximumPriceInput");
+    priceLabel.textContent = "Maximum price";
+    priceLabel.style.marginRight = "0.5em";
+    priceDiv.appendChild(priceLabel);
+
+    priceInput = document.createElement("input");
+    priceInput.id = "maximumPriceInput";
+    priceInput.setAttribute("type", "number");
+    priceInput.setAttribute("min", "0");
+    priceInput.addEventListener("input", maximumPriceChanged);
+    priceInput.style.width = "3.5em";
+    priceDiv.appendChild(priceInput);
+
+    controls.appendChild(priceDiv);
 
     var discountDiv = document.createElement("div");
     discountDiv.style.textAlign = "right";
@@ -136,6 +157,7 @@ function updatePercentageDivVisibility() {
  */
 function enableInputElements(enable) {
     showOnlyDiscountedItemsCheckbox.disabled = !enable;
+    priceInput.disabled = !enable;
     percentageInput.disabled = !enable;
 }
 
@@ -208,9 +230,33 @@ function checkboxChanged() {
     if (showOnlyDiscountedItems && inputTimer) {
         clearInputTimer();
     }
-    var show = showOnlyDiscountedItems ? minimumDiscountPercentage : 0;
     updatePercentageDivVisibility();
-    updateShownItems(show);
+    updateShownItems();
+}
+
+function maximumPriceChanged() {
+    var input = priceInput.value;
+    if (input === "") {
+        maximumPrice = undefined;
+        clearInputTimer();
+        return;
+    }
+
+    var inputValue = Number.parseInt(input);
+    if (isNaN(inputValue)) {
+        maximumPrice = undefined;
+        clearInputTimer();
+        return;
+    }
+
+    maximumPrice = inputValue;
+    if (inputTimer) {
+        clearInputTimer();
+    }
+    var callback = function() {
+        updateShownItems();
+    };
+    inputTimer = setTimeout(callback, 500);
 }
 
 /**
@@ -235,7 +281,7 @@ function percentageDiscountChanged() {
         clearInputTimer();
     }
     var callback = function() {
-        updateShownItems(minimumDiscountPercentage);
+        updateShownItems();
     };
     inputTimer = setTimeout(callback, 500);
 }
@@ -252,24 +298,31 @@ function clearInputTimer() {
 
 /**
  * Updates the list of shown items according to the minimum discount percentage.
- * @param {Number} minimumDiscountPercentage - Minimum discount percentage
  */
-function updateShownItems(minimumDiscountPercentage) {
-    var showAllItems = minimumDiscountPercentage === 0;
+function updateShownItems() {
+    var showUndiscountedItems =
+        !showOnlyDiscountedItems || minimumDiscountPercentage === 0;
+    var maximumPriceSet = !isNaN(maximumPrice);
 
     for (var i = 0; i < unpricedItems.length; i++) {
         var item = unpricedItems[i];
-        item.display(showAllItems);
+        item.display(showUndiscountedItems);
     }
 
     for (var i = 0; i < normallyPricedItems.length; i++) {
         var item = normallyPricedItems[i];
-        item.display(showAllItems);
+        var priceGoodEnough =
+            maximumPriceSet ? item.price <= maximumPrice : true;
+        item.display(showUndiscountedItems && priceGoodEnough);
     }
 
     for (var i = 0; i < discountedItems.length; i++) {
         var item = discountedItems[i];
-        var showItem = item.discountPercentage >= minimumDiscountPercentage;
+        var discountGoodEnough =
+            item.discountPercentage >= minimumDiscountPercentage;
+        var priceGoodEnough =
+            maximumPriceSet ? item.price <= maximumPrice : true;
+        var showItem = discountGoodEnough && priceGoodEnough;
         item.display(showItem);
     }
 }
