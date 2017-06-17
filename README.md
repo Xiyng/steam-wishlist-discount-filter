@@ -1,6 +1,6 @@
-# Steam Wishlist Discount Filter
+# Steam Wishlist Price Filter
 
-Steam Wishlist Discount Filter is a userscript that adds the option to show only
+Steam Wishlist Price Filter is a userscript that adds the option to show only
 discounted items in your Steam wishlist. If you're interested in
 using/downloading the script, [this page](https://xiyng.github.io/steam-wishlist-discount-filter/)
 is probably what you're looking for.
@@ -11,6 +11,12 @@ is probably what you're looking for.
 - Choose showed items by discount percentage
 
 ## Changelog
+
+### 1.2.0
+
+- Renamed the script
+- Added the option to filter games by price
+- Changed the type and colour of input fields
 
 ### 1.1.2
 
