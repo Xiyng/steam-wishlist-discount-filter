@@ -208,7 +208,7 @@ function updateItemLists() {
             var discountPercentage = -parseInt(discountPercentageText);
             var priceText = discount
                 .getElementsByClassName("discount_prices")[0]
-                .getElementsByClassName("discount_original_price")[0]
+                .getElementsByClassName("discount_final_price")[0]
                 .textContent;
             var price = parseFloat(priceText);
             var item = new discountedItemDetails(
