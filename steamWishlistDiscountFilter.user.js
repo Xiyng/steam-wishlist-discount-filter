@@ -12,7 +12,6 @@
 // ==/UserScript==
 
 var showOnlyDiscountedItemsCheckbox;
-var percentageLabel;
 var priceInput;
 var percentageInput;
 var unpricedItems;
