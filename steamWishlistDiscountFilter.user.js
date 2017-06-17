@@ -14,6 +14,7 @@
 var showOnlyDiscountedItemsCheckbox;
 var percentageLabel;
 var percentageInput;
+var unpricedItems;
 var normallyPricedItems;
 var discountedItems;
 var inputTimer; // for adding a delay to updating the item list when changing minimum discount percentage
@@ -45,13 +46,26 @@ function itemDetails(node) {
 }
 
 /**
+ * Priced wishlist item details
+ * @constructs itemDetails
+ * @param {HTMLElement} node - Item node
+ * @param {Number} price - The price of the item
+ */
+function pricedItemDetails(node, price) {
+    itemDetails.call(this, node);
+    this.price = price;
+}
+
+/**
  * Discounted wishlist item details
  * @constructs discountedItemDetails
  * @param {HTMLElement} node - Item node
+ * @param {Number} price - The price of the item
  * @param {Number} discountPercentage - Discount percentage of the item
  */
-function discountedItemDetails(node, discountPercentage) {
-    itemDetails.call(this, node);
+function discountedItemDetails(node, price, discountPercentage) {
+    pricedItemDetails.call(this, node, price);
+    this.normalPrice = price;
     this.discountPercentage = discountPercentage;
 }
 
@@ -132,6 +146,7 @@ function enableInputElements(enable) {
 function updateItemLists() {
     enableInputElements(false);
 
+    unpricedItems = [];
     normallyPricedItems = [];
     discountedItems = [];
 
@@ -139,21 +154,43 @@ function updateItemLists() {
     var wishlistItems = wishlist.children;
     for (var i = 0; i < wishlistItems.length; i++) {
         var wishlistItem = wishlistItems[i];
-        var discount = wishlistItem
+        var priceData = wishlistItem
             .getElementsByClassName("wishlistRowItem")[0]
-            .getElementsByClassName("gameListPriceData")[0]
-            .getElementsByClassName("discount_block discount_block_inline")[0];
-        if (!discount) {
-            var item = new itemDetails(wishlistItem);
-            normallyPricedItems.push(item);
+            .getElementsByClassName("gameListPriceData")[0];
+        var discount = priceData
+            .getElementsByClassName("discount_block discount_block_inline");
+        if (discount.length < 1) {
+            var priceElements = priceData.getElementsByClassName("price");
+            if (!priceElements || priceElements.length < 1) {
+                var item = new itemDetails(wishlistItem);
+                unpricedItems.push(item);
+            }
+            else {
+                var priceText = priceElements[0].textContent.trim();
+                if (priceText !== '' && isNaN(priceText.charAt(0))) {
+                    priceText = priceText.substr(1);
+                }
+                var price = parseFloat(priceText.replace(",", ".")); // should work in most cases - not all
+                if (price !== '' && isNaN(price)) {
+                    price = 0; // *probably* a free-to-play title
+                }
+                var item = new pricedItemDetails(wishlistItem, price);
+                normallyPricedItems.push(item);
+            }
         }
         else {
+            discount = discount[0];
             var discountPercentageText = discount
                 .getElementsByClassName("discount_pct")[0]
                 .textContent;
             var discountPercentage = -parseInt(discountPercentageText);
+            var priceText = discount
+                .getElementsByClassName("discount_prices")[0]
+                .getElementsByClassName("discount_original_price")[0]
+                .textContent;
+            var price = parseFloat(priceText);
             var item = new discountedItemDetails(
-                wishlistItem, discountPercentage
+                wishlistItem, price, discountPercentage
             );
             discountedItems.push(item);
         }
@@ -218,10 +255,16 @@ function clearInputTimer() {
  * @param {Number} minimumDiscountPercentage - Minimum discount percentage
  */
 function updateShownItems(minimumDiscountPercentage) {
-    var showNormallyPricedItems = minimumDiscountPercentage === 0;
+    var showAllItems = minimumDiscountPercentage === 0;
+
+    for (var i = 0; i < unpricedItems.length; i++) {
+        var item = unpricedItems[i];
+        item.display(showAllItems);
+    }
+
     for (var i = 0; i < normallyPricedItems.length; i++) {
         var item = normallyPricedItems[i];
-        item.display(showNormallyPricedItems);
+        item.display(showAllItems);
     }
 
     for (var i = 0; i < discountedItems.length; i++) {
