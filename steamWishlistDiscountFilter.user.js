@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name        Steam Wishlist Discount Filter
-// @description Adds the option to show only discounted items in your Steam wishlist.
+// @name        Steam Wishlist Price Filter
+// @description Adds price filters your Steam wishlist.
 // @namespace   Xiyng
 // @include     https://steamcommunity.com/id/*/wishlist
 // @include     https://steamcommunity.com/id/*/wishlist/*
-// @version     1.1.2
+// @version     1.2.0
 // noframes
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js
 // @grant       none
