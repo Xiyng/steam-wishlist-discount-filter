@@ -284,7 +284,8 @@ function clearInputTimer() {
 }
 
 /**
- * Updates the list of shown items according to the minimum discount percentage.
+ * Updates the list of shown items according to the maximum price and minimum
+ * discount percentage.
  */
 function updateShownItems() {
     var maximumPriceSet = !isNaN(maximumPrice);
