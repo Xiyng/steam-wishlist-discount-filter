@@ -16,6 +16,7 @@ what you're looking for.
 ### 1.2.1
 
 - Added support for decimal numbers in input fields
+- Removed the discount checkbox in favour of the discount percentage input field
 
 ### 1.2.0
 
