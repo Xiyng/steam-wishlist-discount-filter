@@ -13,6 +13,10 @@ what you're looking for.
 
 ## Changelog
 
+### 1.2.1
+
+- Added support for decimal numbers in input fields
+
 ### 1.2.0
 
 - Renamed the script
