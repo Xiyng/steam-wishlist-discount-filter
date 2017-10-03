@@ -250,25 +250,20 @@ function updateShownItems() {
     var showUndiscountedItems =
         !minimumDiscountPercentageSet || minimumDiscountPercentage === 0;
 
-    for (var i = 0; i < unpricedItems.length; i++) {
-        var item = unpricedItems[i];
-        item.display(showUndiscountedItems);
-    }
+    unpricedItems.forEach(item => item.display(showUndiscountedItems));
 
-    for (var i = 0; i < normallyPricedItems.length; i++) {
-        var item = normallyPricedItems[i];
+    normallyPricedItems.forEach(function(item) {
         var priceGoodEnough =
             maximumPriceSet ? item.price <= maximumPrice : true;
         item.display(showUndiscountedItems && priceGoodEnough);
-    }
+    })
 
-    for (var i = 0; i < discountedItems.length; i++) {
-        var item = discountedItems[i];
+    discountedItems.forEach(item => {
         var discountGoodEnough = minimumDiscountPercentageSet ?
             item.discountPercentage >= minimumDiscountPercentage : true;
         var priceGoodEnough = maximumPriceSet ?
             item.price <= maximumPrice : true;
         var showItem = discountGoodEnough && priceGoodEnough;
         item.display(showItem);
-    }
+    });
 }
