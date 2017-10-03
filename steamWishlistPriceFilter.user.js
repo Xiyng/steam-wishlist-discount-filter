@@ -1,10 +1,10 @@
-// ==UserScript==
+﻿// ==UserScript==
 // @name        Steam Wishlist Price Filter
 // @description Adds price filters your Steam wishlist.
 // @namespace   Xiyng
 // @include     https://steamcommunity.com/id/*/wishlist
 // @include     https://steamcommunity.com/id/*/wishlist/*
-// @version     1.2.0
+// @version     1.2.1
 // noframes
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js
 // @grant       none
@@ -204,7 +204,7 @@ function updateItemLists() {
             var discountPercentageText = discount
                 .getElementsByClassName("discount_pct")[0]
                 .textContent;
-            var discountPercentage = -parseInt(discountPercentageText);
+            var discountPercentage = -parseFloat(discountPercentageText);
             var priceText = discount
                 .getElementsByClassName("discount_prices")[0]
                 .getElementsByClassName("discount_final_price")[0]
@@ -239,7 +239,7 @@ function maximumPriceChanged() {
         maximumPrice = undefined;
     }
 
-    var inputValue = Number.parseInt(input);
+    var inputValue = Number.parseFloat(input);
     maximumPrice = isNaN(inputValue) ? undefined : inputValue;
 
     if (inputTimer) {
@@ -261,7 +261,7 @@ function percentageDiscountChanged() {
         minimumDiscountPercentage = undefined;
     }
 
-    var inputValue = Number.parseInt(input);
+    var inputValue = Number.parseFloat(input);
     minimumDiscountPercentage = isNaN(inputValue) ? undefined : inputValue;
 
     if (inputTimer) {
