@@ -11,7 +11,6 @@
 // @run-at      document-start
 // ==/UserScript==
 
-var showOnlyDiscountedItemsCheckbox;
 var priceInput;
 var percentageDiv;
 var percentageInput;
@@ -20,7 +19,6 @@ var normallyPricedItems;
 var discountedItems;
 var inputTimer; // for adding a delay to updating the item list when changing minimum discount percentage
 var maximumPrice = undefined;
-var showOnlyDiscountedItems = false;
 var minimumDiscountPercentage = undefined;
 
 $(document).ready(initialize);
@@ -97,22 +95,6 @@ function addControls() {
 
     controls.appendChild(priceDiv);
 
-    var discountDiv = document.createElement("div");
-    discountDiv.style.textAlign = "right";
-
-    showOnlyDiscountedItemsCheckbox = document.createElement("input");
-    showOnlyDiscountedItemsCheckbox.id = "showOnlyDiscountedItemsCheckbox";
-    showOnlyDiscountedItemsCheckbox.setAttribute("type", "checkbox");
-    showOnlyDiscountedItemsCheckbox.addEventListener("change", checkboxChanged);
-    discountDiv.appendChild(showOnlyDiscountedItemsCheckbox);
-
-    var checkboxLabel = document.createElement("label");
-    checkboxLabel.setAttribute("for", "showOnlyDiscountedItemsCheckbox");
-    checkboxLabel.textContent = "Show only discounted items";
-    discountDiv.appendChild(checkboxLabel);
-
-    controls.appendChild(discountDiv);
-
     percentageDiv = document.createElement("div");
     percentageDiv.style.textAlign = "right";
 
@@ -132,7 +114,6 @@ function addControls() {
     percentageInput.style.width = "3.5em";
     percentageDiv.appendChild(percentageInput);
 
-    updatePercentageDivVisibility();
     controls.appendChild(percentageDiv);
 
     enableInputElements(false);
@@ -141,21 +122,10 @@ function addControls() {
 }
 
 /**
- * Updates the visibility of the minimum percentage discount div element. The
- * element is visible when the filter is set to show only discounted items, and
- * otherwise it is be hidden.
- */
-function updatePercentageDivVisibility() {
-    var percentageDivVisibility = showOnlyDiscountedItems ? "visible" : "hidden";
-    percentageDiv.style.visibility = percentageDivVisibility;
-}
-
-/**
  * Enables or disables the input elements.
  * @param {Boolean} enable - true enables the elements, false disables them
  */
 function enableInputElements(enable) {
-    showOnlyDiscountedItemsCheckbox.disabled = !enable;
     priceInput.disabled = !enable;
     percentageInput.disabled = !enable;
 }
@@ -220,19 +190,6 @@ function updateItemLists() {
     enableInputElements(true);
 }
 
-/**
- * Handles changes in the status of the checkbox. In practice, mainly updates
- * the list of visible items.
- */
-function checkboxChanged() {
-    showOnlyDiscountedItems = showOnlyDiscountedItemsCheckbox.checked;
-    if (showOnlyDiscountedItems && inputTimer) {
-        clearInputTimer();
-    }
-    updatePercentageDivVisibility();
-    updateShownItems();
-}
-
 function maximumPriceChanged() {
     var input = priceInput.value;
     if (input === "") {
@@ -291,8 +248,7 @@ function updateShownItems() {
     var maximumPriceSet = !isNaN(maximumPrice);
     var minimumDiscountPercentageSet = !isNaN(minimumDiscountPercentage);
     var showUndiscountedItems =
-        !showOnlyDiscountedItems ||
-        (minimumDiscountPercentageSet && minimumDiscountPercentage === 0);
+        !minimumDiscountPercentageSet || minimumDiscountPercentage === 0;
 
     for (var i = 0; i < unpricedItems.length; i++) {
         var item = unpricedItems[i];
