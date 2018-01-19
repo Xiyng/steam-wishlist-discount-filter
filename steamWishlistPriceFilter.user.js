@@ -202,13 +202,7 @@ function maximumPriceChanged() {
     const inputValue = Number.parseFloat(input);
     maximumPrice = isNaN(inputValue) ? undefined : inputValue;
 
-    if (inputTimer) {
-        clearInputTimer();
-    }
-    const callback = function() {
-        updateShownItems();
-    };
-    inputTimer = setTimeout(callback, 500);
+    restartInputTimer();
 }
 
 /**
@@ -224,6 +218,13 @@ function percentageDiscountChanged() {
     const inputValue = Number.parseFloat(input);
     minimumDiscountPercentage = isNaN(inputValue) ? undefined : inputValue;
 
+    restartInputTimer();
+}
+
+/**
+ * (Re)starts the input timer.
+ */
+function restartInputTimer() {
     if (inputTimer) {
         clearInputTimer();
     }
