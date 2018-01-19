@@ -260,7 +260,7 @@ function updateShownItems() {
         const priceGoodEnough =
             maximumPriceSet ? item.price <= maximumPrice : true;
         item.display(showUndiscountedItems && priceGoodEnough);
-    })
+    });
 
     discountedItems.forEach(item => {
         const discountGoodEnough = minimumDiscountPercentageSet ?
