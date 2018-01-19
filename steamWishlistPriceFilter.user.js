@@ -18,8 +18,8 @@ let unpricedItems;
 let normallyPricedItems;
 let discountedItems;
 let inputTimer; // for adding a delay to updating the item list when changing minimum discount percentage
-let maximumPrice = undefined;
-let minimumDiscountPercentage = undefined;
+let maximumPrice = null;
+let minimumDiscountPercentage = null;
 
 $(document).ready(initialize);
 
@@ -196,11 +196,11 @@ function updateItemLists() {
 function maximumPriceChanged() {
     const input = priceInput.value;
     if (input === "") {
-        maximumPrice = undefined;
+        maximumPrice = null;
     }
 
     const inputValue = Number.parseFloat(input);
-    maximumPrice = isNaN(inputValue) ? undefined : inputValue;
+    maximumPrice = isNaN(inputValue) ? null : inputValue;
 
     restartInputTimer();
 }
@@ -212,11 +212,11 @@ function maximumPriceChanged() {
 function percentageDiscountChanged() {
     const input = percentageInput.value;
     if (input === "") {
-        minimumDiscountPercentage = undefined;
+        minimumDiscountPercentage = null;
     }
 
     const inputValue = Number.parseFloat(input);
-    minimumDiscountPercentage = isNaN(inputValue) ? undefined : inputValue;
+    minimumDiscountPercentage = isNaN(inputValue) ? null : inputValue;
 
     restartInputTimer();
 }
@@ -249,8 +249,8 @@ function clearInputTimer() {
  * discount percentage.
  */
 function updateShownItems() {
-    const maximumPriceSet = !isNaN(maximumPrice);
-    const minimumDiscountPercentageSet = !isNaN(minimumDiscountPercentage);
+    const maximumPriceSet = maximumPrice !== null;
+    const minimumDiscountPercentageSet = minimumDiscountPercentage !== null;
     const showUndiscountedItems =
         !minimumDiscountPercentageSet || minimumDiscountPercentage === 0;
 
