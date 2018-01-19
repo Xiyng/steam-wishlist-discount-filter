@@ -11,15 +11,15 @@
 // @run-at      document-start
 // ==/UserScript==
 
-var priceInput;
-var percentageDiv;
-var percentageInput;
-var unpricedItems;
-var normallyPricedItems;
-var discountedItems;
-var inputTimer; // for adding a delay to updating the item list when changing minimum discount percentage
-var maximumPrice = undefined;
-var minimumDiscountPercentage = undefined;
+let priceInput;
+let percentageDiv;
+let percentageInput;
+let unpricedItems;
+let normallyPricedItems;
+let discountedItems;
+let inputTimer; // for adding a delay to updating the item list when changing minimum discount percentage
+let maximumPrice = undefined;
+let minimumDiscountPercentage = undefined;
 
 $(document).ready(initialize);
 
@@ -40,7 +40,7 @@ function itemDetails(node) {
     this.node = node;
 
     this.display = function(display) {
-        var displayValue = display ? "block" : "none";
+        let displayValue = display ? "block" : "none";
         this.node.style.display = displayValue;
     };
 }
@@ -73,14 +73,14 @@ function discountedItemDetails(node, price, discountPercentage) {
  * Adds controls for the script.
  */
 function addControls() {
-    var wishlist = document.getElementById("wishlist_items");
-    var controls = document.createElement("div");
+    const wishlist = document.getElementById("wishlist_items");
+    const controls = document.createElement("div");
     controls.style.display = "inline";
 
-    var priceDiv = document.createElement("div");
+    const priceDiv = document.createElement("div");
     priceDiv.style.textAlign = "right";
 
-    var priceLabel = document.createElement("label");
+    const priceLabel = document.createElement("label");
     priceLabel.setAttribute("for", "maximumPriceInput");
     priceLabel.textContent = "Maximum price";
     priceLabel.style.marginRight = "0.5em";
@@ -98,7 +98,7 @@ function addControls() {
     percentageDiv = document.createElement("div");
     percentageDiv.style.textAlign = "right";
 
-    var percentageLabel = document.createElement("label");
+    const percentageLabel = document.createElement("label");
     percentageLabel.setAttribute("for", "discountPercentageInput");
     percentageLabel.textContent = "Minimum discount percentage";
     percentageLabel.style.marginRight = "0.5em";
@@ -117,7 +117,7 @@ function addControls() {
     controls.appendChild(percentageDiv);
 
     enableInputElements(false);
-    var disabledSaveAction = document.getElementById("save_action_disabled_1");
+    const disabledSaveAction = document.getElementById("save_action_disabled_1");
     disabledSaveAction.parentNode.insertBefore(controls, disabledSaveAction);
 }
 
@@ -141,46 +141,46 @@ function updateItemLists() {
     normallyPricedItems = [];
     discountedItems = [];
 
-    var wishlist = document.getElementById("wishlist_items");
-    var wishlistItems = wishlist.children;
-    for (var i = 0; i < wishlistItems.length; i++) {
-        var wishlistItem = wishlistItems[i];
-        var priceData = wishlistItem
+    const wishlist = document.getElementById("wishlist_items");
+    const wishlistItems = wishlist.children;
+    for (let i = 0; i < wishlistItems.length; i++) {
+        const wishlistItem = wishlistItems[i];
+        const priceData = wishlistItem
             .getElementsByClassName("wishlistRowItem")[0]
             .getElementsByClassName("gameListPriceData")[0];
-        var discount = priceData
+        let discount = priceData
             .getElementsByClassName("discount_block discount_block_inline");
         if (discount.length < 1) {
-            var priceElements = priceData.getElementsByClassName("price");
+            const priceElements = priceData.getElementsByClassName("price");
             if (!priceElements || priceElements.length < 1) {
-                var item = new itemDetails(wishlistItem);
+                const item = new itemDetails(wishlistItem);
                 unpricedItems.push(item);
             }
             else {
-                var priceText = priceElements[0].textContent.trim();
+                let priceText = priceElements[0].textContent.trim();
                 if (priceText !== '' && isNaN(priceText.charAt(0))) {
                     priceText = priceText.substr(1);
                 }
-                var price = parseFloat(priceText.replace(",", ".")); // should work in most cases - not all
+                let price = parseFloat(priceText.replace(",", ".")); // should work in most cases - not all
                 if (price !== '' && isNaN(price)) {
                     price = 0; // *probably* a free-to-play title
                 }
-                var item = new pricedItemDetails(wishlistItem, price);
+                const item = new pricedItemDetails(wishlistItem, price);
                 normallyPricedItems.push(item);
             }
         }
         else {
             discount = discount[0];
-            var discountPercentageText = discount
+            const discountPercentageText = discount
                 .getElementsByClassName("discount_pct")[0]
                 .textContent;
-            var discountPercentage = -parseFloat(discountPercentageText);
-            var priceText = discount
+            const discountPercentage = -parseFloat(discountPercentageText);
+            const priceText = discount
                 .getElementsByClassName("discount_prices")[0]
                 .getElementsByClassName("discount_final_price")[0]
                 .textContent;
-            var price = parseFloat(priceText);
-            var item = new discountedItemDetails(
+            const price = parseFloat(priceText);
+            const item = new discountedItemDetails(
                 wishlistItem, price, discountPercentage
             );
             discountedItems.push(item);
@@ -191,18 +191,18 @@ function updateItemLists() {
 }
 
 function maximumPriceChanged() {
-    var input = priceInput.value;
+    const input = priceInput.value;
     if (input === "") {
         maximumPrice = undefined;
     }
 
-    var inputValue = Number.parseFloat(input);
+    const inputValue = Number.parseFloat(input);
     maximumPrice = isNaN(inputValue) ? undefined : inputValue;
 
     if (inputTimer) {
         clearInputTimer();
     }
-    var callback = function() {
+    const callback = function() {
         updateShownItems();
     };
     inputTimer = setTimeout(callback, 500);
@@ -213,18 +213,18 @@ function maximumPriceChanged() {
  * field is changed.
  */
 function percentageDiscountChanged() {
-    var input = percentageInput.value;
+    const input = percentageInput.value;
     if (input === "") {
         minimumDiscountPercentage = undefined;
     }
 
-    var inputValue = Number.parseFloat(input);
+    const inputValue = Number.parseFloat(input);
     minimumDiscountPercentage = isNaN(inputValue) ? undefined : inputValue;
 
     if (inputTimer) {
         clearInputTimer();
     }
-    var callback = function() {
+    const callback = function() {
         updateShownItems();
     };
     inputTimer = setTimeout(callback, 500);
@@ -245,25 +245,25 @@ function clearInputTimer() {
  * discount percentage.
  */
 function updateShownItems() {
-    var maximumPriceSet = !isNaN(maximumPrice);
-    var minimumDiscountPercentageSet = !isNaN(minimumDiscountPercentage);
-    var showUndiscountedItems =
+    const maximumPriceSet = !isNaN(maximumPrice);
+    const minimumDiscountPercentageSet = !isNaN(minimumDiscountPercentage);
+    const showUndiscountedItems =
         !minimumDiscountPercentageSet || minimumDiscountPercentage === 0;
 
     unpricedItems.forEach(item => item.display(showUndiscountedItems));
 
     normallyPricedItems.forEach(function(item) {
-        var priceGoodEnough =
+        const priceGoodEnough =
             maximumPriceSet ? item.price <= maximumPrice : true;
         item.display(showUndiscountedItems && priceGoodEnough);
     })
 
     discountedItems.forEach(item => {
-        var discountGoodEnough = minimumDiscountPercentageSet ?
+        const discountGoodEnough = minimumDiscountPercentageSet ?
             item.discountPercentage >= minimumDiscountPercentage : true;
-        var priceGoodEnough = maximumPriceSet ?
+        const priceGoodEnough = maximumPriceSet ?
             item.price <= maximumPrice : true;
-        var showItem = discountGoodEnough && priceGoodEnough;
+        const showItem = discountGoodEnough && priceGoodEnough;
         item.display(showItem);
     });
 }
