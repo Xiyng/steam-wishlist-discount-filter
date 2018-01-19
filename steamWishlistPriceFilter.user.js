@@ -190,6 +190,9 @@ function updateItemLists() {
     enableInputElements(true);
 }
 
+/**
+ * Handles updating the item list when the maximum price input field is changed.
+ */
 function maximumPriceChanged() {
     const input = priceInput.value;
     if (input === "") {
