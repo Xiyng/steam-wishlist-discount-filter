@@ -141,14 +141,24 @@ function updateItemLists() {
     normallyPricedItems = [];
     discountedItems = [];
 
-    const wishlist = document.getElementById("wishlist_items");
-    const wishlistItems = wishlist.children;
+    const wishlistItems = document.getElementById("wishlist_items").children;
     for (let i = 0; i < wishlistItems.length; i++) {
-        const wishlistItem = wishlistItems[i];
-        const priceData = wishlistItem
+        handleWishlistItem(wishlistItems[i]);
+    }
+
+    enableInputElements(true);
+}
+
+/**
+ * Adds an element corresponding to the wishlist item in the proper list (among
+ * unpricedItems, normallyPricedItems, and discountedItems).
+ * @param {HTMLElement} wishlistItem - The wishlist item
+ */
+function handleWishlistItem(wishlistItem) {
+    const priceData = wishlistItem
             .getElementsByClassName("wishlistRowItem")[0]
             .getElementsByClassName("gameListPriceData")[0];
-        let discount = priceData
+        const discount = priceData
             .getElementsByClassName("discount_block discount_block_inline");
         if (discount.length < 1) {
             const priceElements = priceData.getElementsByClassName("price");
@@ -157,37 +167,51 @@ function updateItemLists() {
                 unpricedItems.push(item);
             }
             else {
-                let priceText = priceElements[0].textContent.trim();
-                if (priceText !== '' && isNaN(priceText.charAt(0))) {
-                    priceText = priceText.substr(1);
-                }
-                let price = parseFloat(priceText.replace(",", ".")); // should work in most cases - not all
-                if (price !== '' && isNaN(price)) {
-                    price = 0; // *probably* a free-to-play title
-                }
-                const item = new pricedItemDetails(wishlistItem, price);
-                normallyPricedItems.push(item);
+                const priceText = priceElements[0].textContent.trim();
+                addNormallyPricedItem(wishlistItem, priceText)
             }
         }
         else {
-            discount = discount[0];
-            const discountPercentageText = discount
+            addDiscountedItem(wishlistItem, discount[0]);
+        }
+}
+
+/**
+ * Adds a wishlist item to the list of normally priced wishlist items.
+ * @param {HTMLElement} wishlistItem - The wishlist item to add to the list
+ * @param {String} priceText - The price text of the wishlist item
+ */
+function addNormallyPricedItem(wishlistItem, priceText) {
+    if (priceText !== '' && isNaN(priceText.charAt(0))) {
+        priceText = priceText.substr(1);
+    }
+    let price = parseFloat(priceText.replace(",", ".")); // should work in most cases - not all
+    if (price !== '' && isNaN(price)) {
+        price = 0; // *probably* a free-to-play title
+    }
+    const item = new pricedItemDetails(wishlistItem, price);
+    normallyPricedItems.push(item);
+}
+
+/**
+ * Adds a wishlist item to the list of discounted wishlist items.
+ * @param {HTMLElement} wishlistItem - The wishlist item to add to the list
+ * @param {HTMLElement} discountElement - The discount element of the wishlist item
+ */
+function addDiscountedItem(wishlistItem, discountElement) {
+    const discountPercentageText = discountElement
                 .getElementsByClassName("discount_pct")[0]
                 .textContent;
-            const discountPercentage = -parseFloat(discountPercentageText);
-            const priceText = discount
-                .getElementsByClassName("discount_prices")[0]
-                .getElementsByClassName("discount_final_price")[0]
-                .textContent;
-            const price = parseFloat(priceText);
-            const item = new discountedItemDetails(
-                wishlistItem, price, discountPercentage
-            );
-            discountedItems.push(item);
-        }
-    }
-
-    enableInputElements(true);
+    const discountPercentage = -parseFloat(discountPercentageText);
+    const priceText = discountElement
+        .getElementsByClassName("discount_prices")[0]
+        .getElementsByClassName("discount_final_price")[0]
+        .textContent;
+    const price = parseFloat(priceText);
+    const item = new discountedItemDetails(
+        wishlistItem, price, discountPercentage
+    );
+    discountedItems.push(item);
 }
 
 /**
