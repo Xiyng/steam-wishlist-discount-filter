@@ -2,8 +2,8 @@
 // @name        Steam Wishlist Price Filter
 // @description Adds price filters your Steam wishlist.
 // @namespace   Xiyng
-// @include     https://steamcommunity.com/id/*/wishlist
-// @include     https://steamcommunity.com/id/*/wishlist/*
+// @include     http://store.steampowered.com/wishlist/*
+// @include     https://store.steampowered.com/wishlist/*
 // @version     1.2.2
 // @noframes
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js
