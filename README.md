@@ -6,6 +6,12 @@ interested in using/downloading the script,
 [this page](https://xiyng.github.io/steam-wishlist-price-filter/) is probably
 what you're looking for.
 
+**Note**: The script is currently broken and probably will remain that way
+because of the way the current wishlist page works. It might be possible to
+modify the script to support the new page, but it seems like a lot of work for
+relatively little gain, considering that the new wishlist page implements a lot
+of the same functionality as this script.
+
 ## Features
 
 - Show only discounted items on your Steam wishlist
