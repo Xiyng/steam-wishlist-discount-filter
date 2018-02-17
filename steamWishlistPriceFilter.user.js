@@ -117,8 +117,9 @@ function addControls() {
     controls.appendChild(percentageDiv);
 
     enableInputElements(false);
-    const disabledSaveAction = document.getElementById("save_action_disabled_1");
-    disabledSaveAction.parentNode.insertBefore(controls, disabledSaveAction);
+    
+    const defaultControls = document.getElementsByClassName("controls")[0];
+    defaultControls.appendChild(controls);
 }
 
 /**
