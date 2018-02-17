@@ -73,7 +73,6 @@ function discountedItemDetails(node, price, discountPercentage) {
  * Adds controls for the script.
  */
 function addControls() {
-    const wishlist = document.getElementById("wishlist_items");
     const controls = document.createElement("div");
     controls.style.display = "inline";
 
