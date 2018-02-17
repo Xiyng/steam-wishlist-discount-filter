@@ -116,7 +116,7 @@ function addControls() {
     controls.appendChild(percentageDiv);
 
     enableInputElements(false);
-    
+
     const defaultControls = document.getElementsByClassName("controls")[0];
     defaultControls.appendChild(controls);
 }
